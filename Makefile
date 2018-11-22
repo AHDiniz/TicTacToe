@@ -3,29 +3,34 @@
 # Alan Herculano Diniz
 #
 # Video Reference: https://www.youtube.com/watch?v=gCVMkKgs3uQ&t=827s
+#
+# Build file
 
 
 # Build variables:
 
 CC = gcc # Compiler used
 
-FLAGS = -Wall `pkg-config --libs SDL2` # Compilation flags
+FLAGS = -Wall -lSDL2main -lSDL2 `pkg-config --libs SDL2` # Compilation flags
 
-SRC = src # Source code folder
+LIB = lib # Folder with the libraries used
 
-BIN = bin # Binaries folder
-
-EXE = TicTacToe # Name of the program
+# Name of the program according to the operetional system:
+ifeq ($(OS), Windows_NT)
+	EXE = TicTacToe.exe
+else
+	EXE = TicTacToe.out
+endif
 
 
 # Build targets:
 
-all: $(BIN)/$(EXE) # Main build target
+all: bin/$(EXE) # Main build target
 
 # bin/main.o object file target:
-$(BIN)/main.o: $(SRC)/main.c
+bin/main.o: src/main.c
 	$(CC) -c $^ -o $@ $(FLAGS)
 
 # Executable program target:
-$(BIN)/$(EXE): $(BIN)/main.o
-	$(CC) -o $@ $^ $(FLAGS)
+bin/$(EXE): bin/main.o
+	$(CC) -o $@ $^ $(FLAGS) -L$(LIB)
