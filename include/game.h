@@ -39,4 +39,9 @@ typedef struct game
     GameState currentState; // The game's current state
 } Game;
 
+// Defining the function that draws the game in the screen:
+void Game_Render(SDL_Renderer *renderer, const Game *game);
+
+// Defining the function that 
+
 #endif // GAME_H_

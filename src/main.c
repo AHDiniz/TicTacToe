@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     // Checking for window creation errors:
     if (window == NULL)
     {
-        fprintf(stderr, "ERROR! The SDL Window could not be created. SDL Error: %s\n", SDL_GetError());
+        printf("ERROR! The SDL Window could not be created. SDL Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     if (renderer == NULL)
     {
         SDL_DestroyWindow(window);
-        fprintf(stderr, "ERROR! The SDL Renderer could not be created. SDL Error: %s\n", SDL_GetError());
+        printf("ERROR! The SDL Renderer could not be created. SDL Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
@@ -60,6 +60,11 @@ int main(int argc, char *argv[])
                 default:
                     break;
             }
+
+            // Cleaning the screen:
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+            SDL_RenderPresent(renderer);
         }
     }
 
