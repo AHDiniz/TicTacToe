@@ -1,4 +1,5 @@
 #include "../include/game.h"
+#include "../include/SDL2_gfxPrimitives.h"
 #include <math.h>
 
 const SDL_Color xColor = {.r = 255, .g = 50, .b = 50};
@@ -21,14 +22,20 @@ static void RenderX(SDL_Renderer *renderer, int row, int col, const SDL_Color *c
 {
     const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25;
     const float centerX = CELL_WIDTH * 0.5 + col * CELL_WIDTH;
-    const float centerY = CELL_HEIGHT * 0.5 = row * CELL_HEIGHT;
+    const float centerY = CELL_HEIGHT * 0.5 + row * CELL_HEIGHT;
 
-    
+    thickLineRGBA(renderer, centerX - halfBoxSize, centerY - halfBoxSize, centerX + halfBoxSize, centerY + halfBoxSize, 10, color->r, color->g, color->b, 255);
+    thickLineRGBA(renderer, centerX + halfBoxSize, centerY - halfBoxSize, centerX - halfBoxSize, centerY + halfBoxSize, 10, color->r, color->g, color->b, 255);
 }
 
 static void RenderO(SDL_Renderer *renderer, int row, int col, const SDL_Color *color)
 {
+    const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25;
+    const float centerX = CELL_WIDTH * 0.5 + col * CELL_WIDTH;
+    const float centerY = CELL_HEIGHT * 0.5 + row * CELL_HEIGHT;
 
+    filledCircleRGBA(renderer, centerX, centerY, halfBoxSize, color->r, color->g, color->b, 255);
+    filledCircleRGBA(renderer, centerX, centerY, halfBoxSize - 5, 0, 0, 0, 255);
 }
 
 static void RenderBoard(SDL_Renderer *renderer, const Player *board, const SDL_Color *x, const SDL_Color *o)
@@ -85,6 +92,89 @@ void Game_Render(SDL_Renderer *renderer, const Game *game)
     }
 }
 
+static void SwitchPlayer(Game *game)
+{
+    if (game->currentPlayer == PlayerX) game->currentPlayer = PlayerO;
+    else if (game->currentPlayer == PlayerO) game->currentPlayer = PlayerX;
+}
+
+static int PlayerWinCheck(Game *game, Player player)
+{
+    int rows = 0;
+    int cols = 0;
+    int d1Count = 0;
+    int d2Count = 0;
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            if (game->board[i * N + j] == player) rows++;
+            if (game->board[j * N + i] == player) cols++;
+        }
+
+        if (rows >= N || cols >= N) return 1;
+
+        rows = cols = 0;
+
+        if (game->board[i * N + i] == player) d1Count++;
+        if (game->board[i * N + N - i - 1] == player) d2Count++;
+    }
+
+    return d1Count >= N || d2Count >= N;
+}
+
+static int CellCount(Game *game, Player cell)
+{
+    int count = 0;
+
+    for (int i = 0; i < N * N; i++)
+        if (game->board[i] == cell) count++;
+
+    return count;
+}
+
+static void GameOverCheck(Game *game)
+{
+    if (PlayerWinCheck(game, PlayerX))
+    {
+        game->currentState = XWin;
+    }
+    else if (PlayerWinCheck(game, PlayerO))
+    {
+        game->currentState = OWin;
+    }
+    else if (CellCount(game, Empty) == 0)
+    {
+        game->currentState = Tie;
+    } 
+}
+
+static void PlayerTurn(Game *game, int row, int col)
+{
+    if (game->board[row * N + col] == Empty)
+    {
+        game->board[row * N + col] = game->currentPlayer;
+        SwitchPlayer(game);
+        GameOverCheck(game);
+    }
+}
+
+static void ResetGame(Game *game)
+{
+    game->currentPlayer = PlayerX;
+    game->currentState = Running;
+    for (int i = 0; i < N * N; i++) game->board[i] = Empty;
+}
+
 void Game_ClickOnCell(Game *game, int row, int col)
 {
+    if (game->currentState == Running)
+    {
+        PlayerTurn(game, row, col);
+    }
+    else
+    {
+        ResetGame(game);
+    }
 }

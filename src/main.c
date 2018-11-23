@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
             Empty, Empty, Empty
         },
         .currentPlayer = PlayerX,
-        .currentState = Running
+        .currentState = Tie
     };
 
     // Making the game loop:
