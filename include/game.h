@@ -17,6 +17,9 @@
 #define SCREEN_WIDTH  640 // The width of the screen
 #define SCREEN_HEIGTH 420 // The height of the screen
 
+#define CELL_WIDTH  (SCREEN_WIDTH / N)
+#define CELL_HEIGHT (SCREEN_HEIGTH / N)
+
 #include <SDL2/SDL.h>
 
 // Defining the player data type:
@@ -42,6 +45,7 @@ typedef struct game
 // Defining the function that draws the game in the screen:
 void Game_Render(SDL_Renderer *renderer, const Game *game);
 
-// Defining the function that 
+// Defining the function that checks for a ouse button click in the screen:
+void Game_ClickOnCell(Game *game, int row, int col);
 
 #endif // GAME_H_

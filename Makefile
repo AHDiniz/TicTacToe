@@ -31,6 +31,10 @@ all: bin/$(EXE) # Main build target
 bin/main.o: src/main.c
 	$(CC) -c $^ -o $@ $(FLAGS)
 
+# bin/game.o object file target:
+bin/game.o: src/game.c
+	$(CC) -c $^ -o $@ $(FLAGS)
+
 # Executable program target:
-bin/$(EXE): bin/main.o
-	$(CC) -o $@ $^ $(FLAGS) -L$(LIB)
+bin/$(EXE): bin/main.o bin/game.o
+	$(CC) -o $@ $^ $(FLAGS)

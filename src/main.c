@@ -57,6 +57,9 @@ int main(int argc, char *argv[])
                 case SDL_QUIT: // If the window's close button is pressed...
                     game.currentState = Quit; // The game state will change to Quit, so the program can close
                     break;
+                case SDL_MOUSEBUTTONDOWN: // If the user pressed a mouse button...
+                    Game_ClickOnCell(&game, e.button.y / CELL_HEIGHT, e.button.x / CELL_WIDTH); // Modifing the target cell
+                    break;
                 default:
                     break;
             }
