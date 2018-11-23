@@ -11,7 +11,7 @@
 
 CC = gcc # Compiler used
 
-FLAGS = -Wall -lSDL2main -lSDL2 `pkg-config --libs SDL2` # Compilation flags
+FLAGS = -Wall -lSDL2main -lSDL2 -lm `pkg-config --libs SDL2` # Compilation flags
 
 LIB = lib # Folder with the libraries used
 
@@ -27,14 +27,6 @@ endif
 
 all: bin/$(EXE) # Main build target
 
-# bin/main.o object file target:
-bin/main.o: src/main.c
-	$(CC) -c $^ -o $@ $(FLAGS)
-
-# bin/game.o object file target:
-bin/game.o: src/game.c
-	$(CC) -c $^ -o $@ $(FLAGS)
-
 # Executable program target:
-bin/$(EXE): bin/main.o bin/game.o
+bin/$(EXE): $(wildcard src/*.c)
 	$(CC) -o $@ $^ $(FLAGS)

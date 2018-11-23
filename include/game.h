@@ -15,10 +15,10 @@
 #define N 3 // Dimensions of the game board
 
 #define SCREEN_WIDTH  640 // The width of the screen
-#define SCREEN_HEIGTH 420 // The height of the screen
+#define SCREEN_HEIGHT 420 // The height of the screen
 
 #define CELL_WIDTH  (SCREEN_WIDTH / N)
-#define CELL_HEIGHT (SCREEN_HEIGTH / N)
+#define CELL_HEIGHT (SCREEN_HEIGHT / N)
 
 #include <SDL2/SDL.h>
 

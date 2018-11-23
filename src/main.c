@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     SDL_Init(SDL_INIT_EVERYTHING); // Initializing the SDL modules
 
     // Creating the game window:
-    SDL_Window *window = SDL_CreateWindow("Tic Tac Toe", 100, 100, SCREEN_WIDTH, SCREEN_HEIGTH, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Tic Tac Toe", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     // Checking for window creation errors:
     if (window == NULL)
     {
@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
             // Cleaning the screen:
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
+            Game_Render(renderer, &game);
             SDL_RenderPresent(renderer);
         }
     }
