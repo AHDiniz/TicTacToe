@@ -2,9 +2,13 @@
 #include "../include/SDL2_gfxPrimitives.h"
 #include <math.h>
 
+// Cross color (red)
 const SDL_Color xColor = {.r = 255, .g = 50, .b = 50};
+// Circle color (blue)
 const SDL_Color oColor = {.r = 50, .g = 100, .b = 255};
+// Tie color (grey)
 const SDL_Color tieColor = {.r = 100, .g = 100, .b = 100};
+// Grid color (white)
 const SDL_Color gridColor = {.r = 255, .g = 255, .b = 255};
 
 static void RenderGrid(SDL_Renderer *renderer, const SDL_Color *color)
