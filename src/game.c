@@ -11,10 +11,12 @@ const SDL_Color tieColor = {.r = 100, .g = 100, .b = 100};
 // Grid color (white)
 const SDL_Color gridColor = {.r = 255, .g = 255, .b = 255};
 
+// Function that draws the grid in the screen:
 static void RenderGrid(SDL_Renderer *renderer, const SDL_Color *color)
 {
-    SDL_SetRenderDrawColor(renderer, color->r, color->g, color->b, 255);
+    SDL_SetRenderDrawColor(renderer, color->r, color->g, color->b, 255); // Setting the color to the one given
 
+    // Drawing the grid:
     for (int i = 1; i < N; i++)
     {
         SDL_RenderDrawLine(renderer, i * CELL_WIDTH, 0, i * CELL_WIDTH, SCREEN_HEIGHT);
@@ -22,26 +24,33 @@ static void RenderGrid(SDL_Renderer *renderer, const SDL_Color *color)
     }
 }
 
+// Function that draws a cross in the screen given it's position and it's color:
 static void RenderX(SDL_Renderer *renderer, int row, int col, const SDL_Color *color)
 {
-    const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25;
+    const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25; // Defining the size of the box
+    // Defining the center coordinates:
     const float centerX = CELL_WIDTH * 0.5 + col * CELL_WIDTH;
     const float centerY = CELL_HEIGHT * 0.5 + row * CELL_HEIGHT;
 
+    // Drawing the cross:
     thickLineRGBA(renderer, centerX - halfBoxSize, centerY - halfBoxSize, centerX + halfBoxSize, centerY + halfBoxSize, 10, color->r, color->g, color->b, 255);
     thickLineRGBA(renderer, centerX + halfBoxSize, centerY - halfBoxSize, centerX - halfBoxSize, centerY + halfBoxSize, 10, color->r, color->g, color->b, 255);
 }
 
+// Function that draws a circle in the screen given it's position and it's color:
 static void RenderO(SDL_Renderer *renderer, int row, int col, const SDL_Color *color)
 {
-    const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25;
+    const float halfBoxSize = fmin(CELL_WIDTH, CELL_HEIGHT) * 0.25; // Defining the size of the box
+    // Defining the center coordinates:
     const float centerX = CELL_WIDTH * 0.5 + col * CELL_WIDTH;
     const float centerY = CELL_HEIGHT * 0.5 + row * CELL_HEIGHT;
 
+    // Drawing the circle:
     filledCircleRGBA(renderer, centerX, centerY, halfBoxSize, color->r, color->g, color->b, 255);
     filledCircleRGBA(renderer, centerX, centerY, halfBoxSize - 5, 0, 0, 0, 255);
 }
 
+// Function that draws the board in the screen:
 static void RenderBoard(SDL_Renderer *renderer, const Player *board, const SDL_Color *x, const SDL_Color *o)
 {
     for (int i = 0; i < N; i++)
@@ -63,32 +72,35 @@ static void RenderBoard(SDL_Renderer *renderer, const Player *board, const SDL_C
     }
 }
 
+// Function that draws the game in the running state:
 static void RunningRender(SDL_Renderer *renderer, const Game *game)
 {
     RenderGrid(renderer, &gridColor);
     RenderBoard(renderer, game->board, &xColor, &oColor);
 }
 
+// Function that draws the game in the game over states:
 static void GameOverRender(SDL_Renderer *renderer, const Game *game, const SDL_Color *color)
 {
     RenderGrid(renderer, color);
     RenderBoard(renderer, game->board, color, color);
 }
 
+// Function that renders the game:
 void Game_Render(SDL_Renderer *renderer, const Game *game)
 {
-    switch (game->currentState)
+    switch (game->currentState) // Checking the current state
     {
-        case Running:
+        case Running: // Running state
             RunningRender(renderer, game);
             break;
-        case XWin:
+        case XWin: // Game over with a cross win
             GameOverRender(renderer, game, &xColor);
             break;
-        case OWin:
+        case OWin: // Game over with a circle win
             GameOverRender(renderer, game, &oColor);
             break;
-        case Tie:
+        case Tie: // Game over with a tie
             GameOverRender(renderer, game, &tieColor);
             break;
         default:
@@ -96,12 +108,14 @@ void Game_Render(SDL_Renderer *renderer, const Game *game)
     }
 }
 
+// Function that switches the players
 static void SwitchPlayer(Game *game)
 {
     if (game->currentPlayer == PlayerX) game->currentPlayer = PlayerO;
     else if (game->currentPlayer == PlayerO) game->currentPlayer = PlayerX;
 }
 
+// Function that checks if a given player won
 static int PlayerWinCheck(Game *game, Player player)
 {
     int rows = 0;
