@@ -5,4 +5,4 @@ To build, type:
 
 make
 
-And to run, execute the file in the bin folder.
+And to run, type ./bin/TicTacToe in Linux and .\bin\TicTacToe.exe in Windows
